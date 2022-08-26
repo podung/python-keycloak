@@ -98,6 +98,7 @@ URL_ADMIN_CLIENT_SCOPE_MAPPINGS_CLIENT_ROLES = (
 
 URL_ADMIN_CLIENT_AUTHZ_SETTINGS = URL_ADMIN_CLIENT + "/authz/resource-server/settings"
 URL_ADMIN_CLIENT_AUTHZ_RESOURCES = URL_ADMIN_CLIENT + "/authz/resource-server/resource?max=-1"
+URL_ADMIN_CLIENT_AUTHZ_RESOURCE_UPDATE = URL_ADMIN_CLIENT + "/authz/resource-server/resource/{resource-id}"
 URL_ADMIN_CLIENT_AUTHZ_SCOPES = URL_ADMIN_CLIENT + "/authz/resource-server/scope?max=-1"
 URL_ADMIN_CLIENT_AUTHZ_PERMISSIONS = URL_ADMIN_CLIENT + "/authz/resource-server/permission?max=-1"
 URL_ADMIN_CLIENT_AUTHZ_POLICIES = (

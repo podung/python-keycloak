@@ -1103,6 +1103,29 @@ class KeycloakAdmin:
             data_raw, KeycloakPostError, expected_codes=[201], skip_exists=skip_exists
         )
 
+
+    def update_client_authz_resource(self, client_id, resource_id, payload):
+        """Update resources of client.
+
+        :param client_id: id in ClientRepresentation
+            https://www.keycloak.org/docs-api/18.0/rest-api/index.html#_clientrepresentation
+        :param resource_id: id in ResourceRepresentation
+            https://www.keycloak.org/docs-api/18.0/rest-api/index.html#_resourcerepresentation
+        :param payload: ResourceRepresentation
+            https://www.keycloak.org/docs-api/18.0/rest-api/index.html#_resourcerepresentation
+
+        :return: Keycloak server response
+        """
+        params_path = {"realm-name": self.realm_name, "id": client_id, "resource-id": resource_id}
+
+        data_raw = self.raw_put(
+            urls_patterns.URL_ADMIN_CLIENT_AUTHZ_RESOURCE_UPDATE.format(**params_path),
+            data=json.dumps(payload),
+        )
+        return raise_error_from_response(
+            data_raw, KeycloakPostError, expected_codes=[204]
+        )
+
     def get_client_authz_resources(self, client_id):
         """Get resources from client.
 
@@ -1171,6 +1194,7 @@ class KeycloakAdmin:
                 "policies": [
                     policy_id
                 ]
+            }
 
         """
         params_path = {"realm-name": self.realm_name, "id": client_id}
@@ -1193,6 +1217,29 @@ class KeycloakAdmin:
         params_path = {"realm-name": self.realm_name, "id": client_id}
         data_raw = self.raw_get(urls_patterns.URL_ADMIN_CLIENT_AUTHZ_SCOPES.format(**params_path))
         return raise_error_from_response(data_raw, KeycloakGetError)
+
+    def create_client_authz_scope(self, client_id, payload, skip_exists=False):
+        """Get scopes from client.
+
+        :param client_id: id in ClientRepresentation
+            https://www.keycloak.org/docs-api/18.0/rest-api/index.html#_clientrepresentation
+        :param payload: No Document
+        :param skip_exists: If true then do not raise an error if client already exists
+        :return: Keycloak server response
+
+        Payload example::
+            payload={
+                "name":"Test 1111",
+                "displayName":"Test",
+                "iconUri":"test"
+            }
+        """
+        params_path = {"realm-name": self.realm_name, "id": client_id}
+        data_raw = self.raw_post(
+            urls_patterns.URL_ADMIN_CLIENT_AUTHZ_SCOPES.format(**params_path),
+            data=json.dumps(payload)
+        )
+        return raise_error_from_response(data_raw, KeycloakGetError, skip_exists=skip_exists)
 
     def get_client_authz_permissions(self, client_id):
         """Get permissions from client.
@@ -1383,6 +1430,7 @@ class KeycloakAdmin:
         role = self.get_client_role(client_id, role_name)
         return role.get("id")
 
+    # TODO: This is a typo.  This should be client_id param... but it would break the API that people are using
     def create_client_role(self, client_role_id, payload, skip_exists=False):
         """Create a client role.
 
@@ -2863,6 +2911,24 @@ class KeycloakAdmin:
             urls_patterns.URL_ADMIN_CLIENT_AUTHZ_SCOPE_PERMISSION.format(**params_path)
         )
         return raise_error_from_response(data_raw, KeycloakGetError)
+
+    def create_client_authz_scope_permission(self, client_id, payload, skip_exists=False):
+        """Get permissions for a given scope.
+
+        :param client_id: id in ClientRepresentation
+            https://www.keycloak.org/docs-api/18.0/rest-api/index.html#_clientrepresentation
+        :param skip_exists: Skip if Realm already exist.
+        :param payload
+        :return: Keycloak server response
+        """
+        # TODO: Add an example payload
+        # TODO: Confusing naming - I think "scope-id" is actually the "permisssion-id" of the scope based permission
+        params_path = {"realm-name": self.realm_name, "id": client_id, "scope-id": "" }
+        data_raw = self.raw_post(
+            urls_patterns.URL_ADMIN_CLIENT_AUTHZ_SCOPE_PERMISSION.format(**params_path),
+            data=json.dumps(payload),
+        )
+        return raise_error_from_response(data_raw, KeycloakGetError, skip_exists=skip_exists)
 
     def update_client_authz_scope_permission(self, payload, client_id, scope_id):
         """Update permissions for a given scope.
