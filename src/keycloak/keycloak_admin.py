@@ -1172,6 +1172,25 @@ class KeycloakAdmin:
         )
         return raise_error_from_response(data_raw, KeycloakGetError)
 
+    def get_client_authz_policies_by_name(self, client_id, policy_name):
+        """Get client authz policy by name.
+
+        This is required for further actions with this role.
+
+        RoleRepresentation
+        https://www.keycloak.org/docs-api/18.0/rest-api/index.html#_rolerepresentation
+
+        :param client_id: id of client (not client-id)
+        :param plicy_name: policy’s name (not id!)
+        :return: Keycloak server response (RoleRepresentation)
+        """
+        params_path = {"realm-name": self.realm_name, "id": client_id}
+
+        return self.__fetch_all(
+            urls_patterns.URL_ADMIN_CLIENT_AUTHZ_POLICY.format(**params_path),
+            { "name": policy_name }
+        )
+
     def create_client_authz_role_based_policy(self, client_id, payload, skip_exists=False):
         """Create role-based policy of client.
 

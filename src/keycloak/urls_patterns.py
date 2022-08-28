@@ -104,6 +104,7 @@ URL_ADMIN_CLIENT_AUTHZ_PERMISSIONS = URL_ADMIN_CLIENT + "/authz/resource-server/
 URL_ADMIN_CLIENT_AUTHZ_POLICIES = (
     URL_ADMIN_CLIENT + "/authz/resource-server/policy?max=-1&permission=false"
 )
+URL_ADMIN_CLIENT_AUTHZ_POLICY = URL_ADMIN_CLIENT + "/authz/resource-server/policy?max=-1"
 URL_ADMIN_CLIENT_AUTHZ_ROLE_BASED_POLICY = (
     URL_ADMIN_CLIENT + "/authz/resource-server/policy/role?max=-1"
 )
