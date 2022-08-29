@@ -1511,6 +1511,23 @@ class KeycloakAdmin:
         _last_slash_idx = data_raw.headers["Location"].rindex("/")
         return data_raw.headers["Location"][_last_slash_idx + 1 :]  # noqa: E203
 
+    def add_composite_client_roles_to_role_by_id(self, client_id, client_role_id, roles):
+        """Add composite roles to client role.
+
+        :param client_role_id: id of client (not client-id)
+        :param role_id: The id of the role
+        :param roles: roles list or role (use RoleRepresentation) to be updated
+        :return: Keycloak server response
+        """
+        payload = roles if isinstance(roles, list) else [roles]
+        params_path = {"realm-name": self.realm_name, "id": client_id, "role-id": client_role_id, "roles": roles }
+        data_raw = self.raw_post(
+            urls_patterns.URL_ADMIN_CLIENT_ROLE_BY_ID_COMPOSITES.format(**params_path),
+            data=json.dumps(payload),
+        )
+        return raise_error_from_response(data_raw, KeycloakPostError, expected_codes=[204])
+
+    # TODO: naming of params seems off here
     def add_composite_client_roles_to_role(self, client_role_id, role_name, roles):
         """Add composite roles to client role.
 
