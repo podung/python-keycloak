@@ -1103,39 +1103,20 @@ class KeycloakAdmin:
             data_raw, KeycloakPostError, expected_codes=[201], skip_exists=skip_exists
         )
 
-#    def get_client_authz_resource_by_name(self, client_id, name, skip_exists=False):
-#        """Get resource of an authorization client by name
-#
-#        :param client_id: id in ClientRepresentation
-#            https://www.keycloak.org/docs-api/18.0/rest-api/index.html#_clientrepresentation
-#        :param name: Name of the Resource
-#            https://www.keycloak.org/docs-api/18.0/rest-api/index.html#_resourcerepresentation
-#        :param payload: ResourceRepresentation
-#            https://www.keycloak.org/docs-api/18.0/rest-api/index.html#_resourcerepresentation
-#
-#        :return: Keycloak server response
-#        """
-#        params_path = {"realm-name": self.realm_name, "id": client_id}
-#
-#        # Need a way to shove query string params on here
-#        data_raw = self.raw_post(
-#            urls_patterns.URL_ADMIN_CLIENT_AUTHZ_RESOURCES.format(**params_path),
-#            data=json.dumps(payload),
-#        )
-#
-#
-#        resources = raise_error_from_response(
-#            data_raw, KeycloakPostError, expected_codes=[201], skip_exists=skip_exists
-#        )
-#
-#        # Pattern to follow after doing a search by name (does a fuzzy search)
-#        #client_scopes = self.get_client_scopes()
-#        #for client_scope in client_scopes:
-#        #    if client_scope["name"] == client_scope_name:
-#        #        return client_scope
-#        #
-#
-#        return resource
+    def get_client_authz_resource_by_name(self, client_id, name):
+        """Get resource of an authorization client by name
+
+        :param client_id: id in ClientRepresentation
+            https://www.keycloak.org/docs-api/18.0/rest-api/index.html#_clientrepresentation
+        :param name: Name of the Resource
+            https://www.keycloak.org/docs-api/18.0/rest-api/index.html#_resourcerepresentation
+        :return: Keycloak server response
+        """
+
+        client_resources = self.get_client_authz_resources(client_id=client_id)
+        for resource in client_resources:
+           if resource["name"] == name:
+               return resource
 
     def update_client_authz_resource(self, client_id, resource_id, payload):
         """Update resources of client.
